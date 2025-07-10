@@ -3,7 +3,9 @@ const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
 const { google } = require('google-auth-library');
 const axios = require('axios');
-const serviceAccount = require('./service-account.json');
+require('dotenv').config();
+const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT);
+
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
