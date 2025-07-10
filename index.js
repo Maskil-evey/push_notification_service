@@ -5,6 +5,7 @@ const { google } = require('google-auth-library');
 const axios = require('axios');
 require('dotenv').config();
 const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT);
+console.log(serviceAccount.private_key);
 
 
 admin.initializeApp({
@@ -56,16 +57,11 @@ async function sendPushNotification({ token, title, body, route }) {
 
 app.post('/sendNotification', async (req, res) => {
   try {
-    const { toUserId, title, body, route } = req.body;
+    const { token, title, body, route } = req.body;
 
-    if (!toUserId || !title || !body) {
+    if (!token || !title || !body) {
       return res.status(400).send('Missing required fields');
     }
-
-    const userDoc = await admin.firestore().collection('users').doc(toUserId).get();
-    const token = userDoc.data()?.fcmToken;
-
-    if (!token) return res.status(404).send('User has no FCM token');
 
     await sendPushNotification({ token, title, body, route });
 
@@ -75,6 +71,7 @@ app.post('/sendNotification', async (req, res) => {
     return res.status(500).send('Server error');
   }
 });
+
 
 app.get('/', (_, res) => {
   res.send('🚀 Push Notification API is running!');
