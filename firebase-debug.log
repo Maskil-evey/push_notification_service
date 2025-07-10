@@ -1,0 +1,45 @@
+[debug] [2025-07-10T07:30:49.027Z] ----------------------------------------------------------------------
+[debug] [2025-07-10T07:30:49.030Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\NATHANIEL\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2025-07-10T07:30:49.031Z] CLI Version:   14.9.0
+[debug] [2025-07-10T07:30:49.031Z] Platform:      win32
+[debug] [2025-07-10T07:30:49.031Z] Node Version:  v22.14.0
+[debug] [2025-07-10T07:30:49.031Z] Time:          Thu Jul 10 2025 08:30:49 GMT+0100 (West Africa Standard Time)
+[debug] [2025-07-10T07:30:49.031Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-07-10T07:30:49.252Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-07-10T07:30:54.313Z] Error: Timed out.
+    at Timeout._onTimeout (C:\Users\NATHANIEL\AppData\Roaming\npm\node_modules\firebase-tools\lib\utils.js:267:49)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2025-07-10T07:31:06.402Z] ----------------------------------------------------------------------
+[debug] [2025-07-10T07:31:06.405Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\NATHANIEL\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2025-07-10T07:31:06.406Z] CLI Version:   14.9.0
+[debug] [2025-07-10T07:31:06.406Z] Platform:      win32
+[debug] [2025-07-10T07:31:06.406Z] Node Version:  v22.14.0
+[debug] [2025-07-10T07:31:06.406Z] Time:          Thu Jul 10 2025 08:31:06 GMT+0100 (West Africa Standard Time)
+[debug] [2025-07-10T07:31:06.406Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-07-10T07:31:06.662Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-07-10T07:31:11.732Z] Error: Timed out.
+    at Timeout._onTimeout (C:\Users\NATHANIEL\AppData\Roaming\npm\node_modules\firebase-tools\lib\utils.js:267:49)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2025-07-10T07:38:25.638Z] ----------------------------------------------------------------------
+[debug] [2025-07-10T07:38:25.641Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\NATHANIEL\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2025-07-10T07:38:25.642Z] CLI Version:   14.9.0
+[debug] [2025-07-10T07:38:25.642Z] Platform:      win32
+[debug] [2025-07-10T07:38:25.642Z] Node Version:  v22.14.0
+[debug] [2025-07-10T07:38:25.642Z] Time:          Thu Jul 10 2025 08:38:25 GMT+0100 (West Africa Standard Time)
+[debug] [2025-07-10T07:38:25.642Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-07-10T07:38:25.871Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-07-10T07:38:30.930Z] Error: Timed out.
+    at Timeout._onTimeout (C:\Users\NATHANIEL\AppData\Roaming\npm\node_modules\firebase-tools\lib\utils.js:267:49)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[error] 
+[error] Error: An unexpected error has occurred.
