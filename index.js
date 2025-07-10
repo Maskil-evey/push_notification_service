@@ -1,12 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
-const { google } = require('google-auth-library');
+const { JWT } = require('google-auth-library'); // Correct import
 const axios = require('axios');
 require('dotenv').config();
+
 const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT);
 console.log(serviceAccount.private_key);
-
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -18,15 +18,19 @@ app.use(bodyParser.json());
 const SCOPES = ['https://www.googleapis.com/auth/firebase.messaging'];
 
 async function getAccessToken() {
-  const jwtClient = new google.auth.JWT(
-    serviceAccount.client_email,
-    null,
-    serviceAccount.private_key,
-    SCOPES,
-    null
-  );
-  const tokens = await jwtClient.authorize();
-  return tokens.access_token;
+  try {
+    const jwtClient = new JWT({
+      email: serviceAccount.client_email,
+      key: serviceAccount.private_key,
+      scopes: SCOPES,
+    });
+    const tokens = await jwtClient.authorize();
+    console.log('✅ Access token retrieved');
+    return tokens.access_token;
+  } catch (err) {
+    console.error('❌ Error in getAccessToken:', err);
+    throw err;
+  }
 }
 
 async function sendPushNotification({ token, title, body, route }) {
@@ -61,10 +65,9 @@ async function sendPushNotification({ token, title, body, route }) {
     console.log('✅ FCM response:', response.data);
   } catch (err) {
     console.error('❌ Error inside sendPushNotification:', err.response?.data || err.message);
-    throw err; // rethrow so the route knows it failed
+    throw err;
   }
 }
-
 
 app.post('/sendNotification', async (req, res) => {
   try {
@@ -82,7 +85,6 @@ app.post('/sendNotification', async (req, res) => {
     return res.status(500).send('Server error');
   }
 });
-
 
 app.get('/', (_, res) => {
   res.send('🚀 Push Notification API is running!');
