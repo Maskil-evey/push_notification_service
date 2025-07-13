@@ -92,13 +92,10 @@
 
 // const PORT = process.env.PORT || 3000;
 // app.listen(PORT, () => console.log(`🌍 Listening on port ${PORT}`));
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
 const { JWT } = require('google-auth-library');
-const axios = require('axios');
-const e = require('express');
 require('dotenv').config();
 
 const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT);
@@ -128,73 +125,65 @@ async function getAccessToken() {
   }
 }
 
-async function sendPushNotification({ registration_ids, notification, data }) {
+async function sendPushNotification({ token, topic, notification, data }) {
   try {
-    if (!registration_ids || registration_ids.length === 0) {
-      throw new Error('No valid FCM tokens provided');
+    if (!token && !topic) {
+      throw new Error('No valid FCM token or topic provided');
     }
 
     const accessToken = await getAccessToken();
     const projectId = serviceAccount.project_id;
 
+    // Convert all data values to string
+    const stringifiedData = {};
+    Object.keys(data || {}).forEach((key) => {
+      stringifiedData[key] = String(data[key]);
+    });
+
     const message = {
-      registration_ids,
-      notification: {
-        title: notification.title,
-        body: notification.body,
-        image: notification.image,
+      message: {
+        notification,
+        data: stringifiedData,
+        ...(token ? { token } : {}),
+        ...(topic ? { topic } : {}),
       },
-      data,
     };
 
-    const response = await axios.post(
+    const response = await fetch(
       `https://fcm.googleapis.com/v1/projects/${projectId}/messages:send`,
-      message,
       {
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify(message),
       }
     );
 
-    console.log('✅ FCM response:', response.data);
+    const result = await response.json();
+    if (!response.ok) throw result;
+
+    console.log('✅ FCM response:', result);
   } catch (err) {
-    console.error('❌ Error in sendPushNotification:', err.response?.data || err.message);
+    console.error('❌ Error in sendPushNotification:', err);
     throw err;
   }
 }
 
 app.post('/sendNotification', async (req, res) => {
   try {
-    const { registration_ids,  notification, data } = req.body;
+    const { token, topic, notification, data } = req.body;
 
-    if (!registration_ids || !notification || !notification.title || !notification.body || !data || !data.chatId) {
+    if ((!token && !topic) || !notification || !data || !data.chatId) {
       return res.status(400).send('Missing required fields');
     }
 
-    await sendPushNotification({ registration_ids, notification, data });
-
-    return res.status(200).send('Push notification sent');
+    await sendPushNotification({ token, topic, notification, data });
+    res.status(200).send('Push notification sent');
   } catch (err) {
     console.error('❌ Error sending notification:', err);
-    return res.status(500).send('Server error');
-  }
-});
-app.post('/sendNotification', async (req, res) => {
-  try {
-    const { tokens, title, body, chatId, isGroup } = req.body;
-
-    if (!tokens || !title || !body || !chatId) {
-      return res.status(400).send('Missing required fields');
-    }
-
-    await sendPushNotification({ tokens, title, body, chatId, isGroup });
-
-    return res.status(200).send('Push notification sent');
-  } catch (err) {
-    console.error('❌ Error sending notification:', err);
-    return res.status(500).send('Server error');
+    res.status(500).send('Server error');
   }
 });
 
