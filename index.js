@@ -165,6 +165,7 @@ async function sendPushNotification({ token, topic, notification, data }) {
     if (!response.ok) throw result;
 
     console.log('✅ FCM response:', result);
+    return result;
   } catch (err) {
     console.error('❌ Error in sendPushNotification:', err);
     throw err;
@@ -175,7 +176,7 @@ app.post('/sendNotification', async (req, res) => {
   try {
     const { token, topic, notification, data } = req.body;
 
-    if ((!token && !topic) || !notification || !data || !data.chatId) {
+    if ((!token && !topic) || !notification || !data) {
       return res.status(400).send('Missing required fields');
     }
 
@@ -183,6 +184,22 @@ app.post('/sendNotification', async (req, res) => {
     res.status(200).send('Push notification sent');
   } catch (err) {
     console.error('❌ Error sending notification:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+app.post('/sendCallNotification', async (req, res) => {
+  try {
+    const { token, notification, data } = req.body;
+
+    if (!token || !data || !data.callId || !data.callerId || !data.callType) {
+      return res.status(400).send('Missing required fields for call notification');
+    }
+
+    await sendPushNotification({ token, notification, data });
+    res.status(200).send('Call notification sent');
+  } catch (err) {
+    console.error('❌ Error sending call notification:', err);
     res.status(500).send('Server error');
   }
 });
